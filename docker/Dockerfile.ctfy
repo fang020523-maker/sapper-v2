@@ -15,6 +15,7 @@ RUN apt-get update \
 COPY app/ /srv/agent/app/
 COPY ctfy/ /srv/agent/ctfy/
 COPY core/ /srv/agent/core/
+COPY prompts/ /srv/agent/prompts/
 
 # Absolute path, per §1.2 — a relative entrypoint does not start.
 ENTRYPOINT ["python", "/srv/agent/app/entrypoint.py"]
