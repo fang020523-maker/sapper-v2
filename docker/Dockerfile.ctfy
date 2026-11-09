@@ -1,0 +1,20 @@
+# CTFy competition image (CTFY-0001 v3) — the S0 contract slice.
+#
+# Minimal by design: pure-stdlib Python, no runtime installs, no tmux, no
+# watcher, no credentials. The platform sets the working directory to
+# /ctfy/work and starts us by absolute path; nothing here may depend on
+# the image's own WORKDIR.
+FROM python:3.12-slim
+
+# Tools the reasoning loop will need later land here in later stages —
+# installed at build time only; the run network is not guaranteed.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY app/ /srv/agent/app/
+COPY ctfy/ /srv/agent/ctfy/
+COPY core/ /srv/agent/core/
+
+# Absolute path, per §1.2 — a relative entrypoint does not start.
+ENTRYPOINT ["python", "/srv/agent/app/entrypoint.py"]
