@@ -59,14 +59,19 @@ class EvidenceStore:
         self._save()
         return evidence_id
 
-    def render_for_prompt(self, limit: int = 40) -> str:
-        """Compact listing, newest last, detail omitted; ids citable."""
+    def render_for_prompt(self, limit: int = 40, detail_chars: int = 400) -> str:
+        """Compact listing, newest last, with the head of each detail —
+        an observation the model cannot read is not evidence."""
         if not self._records:
             return "(no observations yet)"
         lines = []
         for record in self._records[-limit:]:
             first_line = record.summary.splitlines()[0] if record.summary else ""
-            lines.append(f"- {record.evidence_id} [{record.kind}] {first_line}")
+            detail = " ".join(record.detail[:detail_chars].split())
+            line = f"- {record.evidence_id} [{record.kind}] {first_line}"
+            if detail:
+                line += f" :: {detail}"
+            lines.append(line[: detail_chars + 200])
         return "\n".join(lines)
 
     def detail_of(self, evidence_id: str) -> str | None:

@@ -33,7 +33,11 @@ class FakeLLMHandler(BaseHTTPRequestHandler):
         server.requests.append({"path": self.path, "headers": dict(self.headers), "body": body})
         index = len(server.done)
         if index < len(server.script):
-            status, payload = server.script[index]
+            item = server.script[index]
+            if callable(item):
+                status, payload = item(body)
+            else:
+                status, payload = item
         else:
             status, payload = 200, server.default
         server.done.append(status)
