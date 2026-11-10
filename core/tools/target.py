@@ -53,6 +53,10 @@ class TargetTCPResponse:
     error: str | None = None
 
 
+class TargetUnreachable(Exception):
+    """The published endpoint did not answer. Data, not a crash."""
+
+
 class TargetClient:
     """No credentials exist in this class — by construction."""
 
@@ -112,6 +116,10 @@ class TargetClient:
                     body=body[: self.max_bytes],
                     truncated=len(body) > self.max_bytes,
                 )
+            except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                raise TargetUnreachable(
+                    f"{method} {url}: {exc.__class__.__name__}"
+                ) from exc
         raise ScopeViolation("too many redirects (loop or walk-out attempt?)")
 
     def tcp(self, request: TargetTCPRequest) -> TargetTCPResponse:

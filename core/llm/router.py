@@ -155,7 +155,7 @@ class _HTTPGateway:
                     f"{request.role!r}: {exc.__class__.__name__}",
                     retryable=True,
                 ) from exc
-            except (json.JSONDecodeError, KeyError, ValueError) as exc:
+            except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
                 self.usage.observe_error()
                 raise GatewayError(
                     f"{self.flavor} gateway returned an unparseable body "

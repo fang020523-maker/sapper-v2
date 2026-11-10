@@ -148,10 +148,20 @@ class GatedRoundTest(RoundHarness):
 
         llm = FakeLLMServer(None)
         llm.script = [
-            reply({"answers": [{"question_id": "flag", "value": "ctfy{one}",
-                                "confidence": 0.9}]}),
-            reply({"answers": [{"question_id": "stage2", "value": "ctfy{two}",
-                                "confidence": 0.9}]}),
+            # Explore turn 1: probe the endpoint (unreachable in this
+            # fixture — must be recorded, not crash the round).
+            reply({"thought": "recon",
+                   "action": {"type": "http", "method": "GET",
+                              "url": "http://3f9c.ctfy.example:80/"}}),
+            # Explore turn 2: answer from knowledge.
+            reply({"thought": "vault secret",
+                   "action": {"type": "answer", "question_id": "flag",
+                              "value": "ctfy{one}", "confidence": 0.9,
+                              "evidence": ["EV-001"]}}),
+            # After the unlock, answer the second question.
+            reply({"thought": "second secret",
+                   "action": {"type": "answer", "question_id": "stage2",
+                              "value": "ctfy{two}", "confidence": 0.9}}),
         ]
         self.llm = llm
         platform = FakeCtfyServer()
@@ -193,9 +203,9 @@ class GatedRoundTest(RoundHarness):
         result = self.result_of(work)
         self.assertEqual(result["solved"], ["flag", "stage2"])
         self.assertTrue(result["fully_solved"])
-        self.assertEqual(len(llm.requests), 2)
-        # The second pass saw the freshly unlocked question.
-        self.assertIn("stage2", llm.requests[1]["body"]["messages"][-1]["content"])
+        # Three model calls: recon, answer flag, answer the unlocked stage2.
+        self.assertEqual(len(llm.requests), 3)
+        self.assertIn("stage2", llm.requests[2]["body"]["messages"][-1]["content"])
 
 
 class FailureShapeTest(RoundHarness):

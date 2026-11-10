@@ -16,6 +16,9 @@ import time
 from pathlib import Path
 
 from app.config import RuntimeConfig
+from app.explorer import Explorer
+from app.scope import EndpointScope
+from core.evidence import EvidenceStore
 from core.llm.router import (
     GatewayError,
     LLMRequest,
@@ -23,6 +26,7 @@ from core.llm.router import (
     build_gateway,
 )
 from core.parse import ModelParseError, extract_json_object
+from core.tools.target import TargetClient
 from ctfy.answers import AnswerCandidate, AnswerLedger, LedgerError, LedgerQuarantined
 from ctfy.client import CtfyApiError, CtfyClient
 from ctfy.result import RunSummary
@@ -50,15 +54,48 @@ def run_round(config: RuntimeConfig, task: TaskSnapshot) -> RunSummary:
     solved: list[str] = []
     stops: list[str] = []
     submissions = 0
+    evidence = EvidenceStore(config.work_dir / ".sapper" / "evidence.json")
+    explorer = None
+    if task.target_endpoints:
+        target = TargetClient(EndpointScope.from_endpoints(task.target_endpoints))
+        try:
+            gateway = build_gateway(config.llm, usage)
+            explorer = Explorer(
+                gateway=gateway,
+                target=target,
+                task=task,
+                readme=readme,
+                evidence=evidence,
+                usage=usage,
+                work_dir=config.work_dir,
+            )
+        except GatewayError:
+            stops.append("llm_unfunded")
 
     for _pass in range(max_passes):
         open_questions = [q for q in questions if not ledger.question_closed(q.id)]
         if not open_questions:
             break
 
-        answers = _one_model_pass(config, task, readme, open_questions, usage, stops)
-        if answers is None:
-            break
+        if explorer is not None:
+            candidates, explore_stop = explorer.run([q.id for q in open_questions])
+            stops.append(explore_stop)
+            answers = [
+                AnswerCandidate(
+                    question_id=c["question_id"],
+                    value=c["value"],
+                    confidence=c["confidence"],
+                    evidence_ids=c["evidence_ids"],
+                    source_turn=usage.calls,
+                )
+                for c in (candidates or [])
+            ]
+            if not answers:
+                break
+        else:
+            answers = _one_model_pass(config, task, readme, open_questions, usage, stops)
+            if answers is None:
+                break
 
         progress = False
         for candidate in answers:
@@ -76,6 +113,8 @@ def run_round(config: RuntimeConfig, task: TaskSnapshot) -> RunSummary:
                         task, questions=tuple(refreshed)
                     )
                     ledger.reconcile(task)
+                    if explorer is not None:
+                        explorer.task = task  # same for the explorer's view
         if not progress:
             break
 
@@ -88,7 +127,7 @@ def run_round(config: RuntimeConfig, task: TaskSnapshot) -> RunSummary:
     summary.input_tokens = usage.input_tokens
     summary.output_tokens = usage.output_tokens
     summary.answers = ledger.fallback_answers()
-    summary.writeup = _writeup(task, questions, solved, stops, usage)
+    summary.writeup = _writeup(task, questions, solved, stops, usage, evidence)
     summary.stop_reason = stops[-1] if stops and not solved else "done"
     return summary
 
@@ -252,17 +291,20 @@ def _questions_block(questions) -> str:
     return "\n".join(f"- {q.id} — {q.prompt}" for q in questions)
 
 
-def _writeup(task, questions, solved, stops, usage) -> str:
+def _writeup(task, questions, solved, stops, usage, evidence=None) -> str:
     lines = [
         f"Round on {task.challenge.id} ({task.run_mode}).",
         f"Solved: {', '.join(solved) if solved else 'nothing'}.",
         f"Model calls: {usage.calls} ({usage.input_tokens} in / "
         f"{usage.output_tokens} out tokens), {usage.retries} retries.",
     ]
+    if evidence is not None and len(evidence):
+        lines.append(f"Evidence gathered: {len(evidence)} observations.")
     if stops:
         lines.append("Stops along the way: " + ", ".join(sorted(set(stops))) + ".")
-    lines.append(
-        "This build submits model-derived answers directly; live target "
-        "exploration is not wired in yet."
-    )
+    if task.target_endpoints:
+        lines.append(
+            "Explored the published endpoints through the scoped target "
+            "client; answers cite evidence ids."
+        )
     return "\n".join(lines)
