@@ -17,5 +17,10 @@ COPY ctfy/ /srv/agent/ctfy/
 COPY core/ /srv/agent/core/
 COPY prompts/ /srv/agent/prompts/
 
+# The platform refuses images that run as root; run as a fixed unprivileged
+# uid with a home directory (the platform may write CLI configs into $HOME).
+RUN useradd --create-home --uid 1000 agent
+USER agent
+
 # Absolute path, per §1.2 — a relative entrypoint does not start.
 ENTRYPOINT ["python", "/srv/agent/app/entrypoint.py"]

@@ -149,6 +149,7 @@ class Explorer:
         method = str(action.get("method", "GET")).upper()
         if not isinstance(url, str) or method not in ALLOWED_METHODS:
             return ("note", f"refused http action: bad url or method {method}")
+        url = _sanitize_url(url)
         headers = {
             str(k): str(v)[:512]
             for k, v in (action.get("headers") or {}).items()
@@ -215,6 +216,18 @@ class Explorer:
             f"attachment {name} was not auto-copied; downloading is the "
             "coordinator's job, not a model action",
         )
+
+
+def _sanitize_url(url: str) -> str:
+    """Percent-encode characters a browser would encode.
+
+    Models routinely emit URLs with spaces (e.g. ``?cmd=cat /flag``);
+    rejecting them wastes a turn the model already spent — encoding them
+    is what any browser does, so we do too.
+    """
+    from urllib.parse import quote
+
+    return quote(url, safe=":/?&=%+#@,;!*'()[]$-._~")
 
 
 def _answer_candidate(action: dict) -> dict | None:
