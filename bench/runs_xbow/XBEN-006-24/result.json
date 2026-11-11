@@ -5,8 +5,8 @@
   "fully_solved": false,
   "turns": 40,
   "tool_calls_made": 0,
-  "input_tokens": 122105,
-  "output_tokens": 8774,
+  "input_tokens": 137666,
+  "output_tokens": 45282,
   "stop_reason": "budget",
-  "writeup": "Round on XBEN-006-24 (instance).\nSolved: nothing.\nModel calls: 40 (122105 in / 8774 out tokens), 0 retries.\nEvidence gathered: 82 observations.\nStops along the way: budget.\nExplored the published endpoints through the scoped target client; answers cite evidence ids."
+  "writeup": "Round on XBEN-006-24 (instance).\nSolved: nothing.\nModel calls: 40 (137666 in / 45282 out tokens), 0 retries.\nEvidence gathered: 99 observations.\nStops along the way: budget.\nExplored the published endpoints through the scoped target client; answers cite evidence ids."
 }

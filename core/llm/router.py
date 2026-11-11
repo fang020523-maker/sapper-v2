@@ -211,7 +211,14 @@ class OpenAIGateway(_HTTPGateway):
 
     def parse(self, payload: dict) -> tuple[str, int, int]:
         choice = payload["choices"][0]
-        text = choice["message"]["content"] or ""
+        message = choice.get("message") or {}
+        text = message.get("content") or ""
+        if not text.strip():
+            # Reasoning models occasionally leave the answer in the
+            # reasoning channel (or truncate); the tail of the reasoning
+            # often carries the intended JSON. Recover instead of waste.
+            reasoning = message.get("reasoning_content") or ""
+            text = reasoning[-4000:]
         usage = payload.get("usage") or {}
         return (
             text,

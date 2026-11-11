@@ -34,14 +34,14 @@
   {
    "evidence_id": "EV-006",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-007",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
   },
   {
    "evidence_id": "EV-008",
@@ -51,9 +51,9 @@
   },
   {
    "evidence_id": "EV-009",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
   },
   {
    "evidence_id": "EV-010",
@@ -69,15 +69,15 @@
   },
   {
    "evidence_id": "EV-012",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-013",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/ with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 500 (21B)",
+   "detail": "Internal Server Error"
   },
   {
    "evidence_id": "EV-014",
@@ -88,14 +88,14 @@
   {
    "evidence_id": "EV-015",
    "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
-   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+   "summary": "POST http://127.0.0.1:8000/jobs -> 500 (21B)",
+   "detail": "Internal Server Error"
   },
   {
    "evidence_id": "EV-016",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
   },
   {
    "evidence_id": "EV-017",
@@ -111,135 +111,135 @@
   },
   {
    "evidence_id": "EV-019",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-020",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-021",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-022",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/openapi.json with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-023",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-024",
-   "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
-   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
-  },
-  {
-   "evidence_id": "EV-025",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-026",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-027",
-   "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/ping -> 200 (15B)",
-   "detail": "{\"ping\":\"pong\"}"
-  },
-  {
-   "evidence_id": "EV-028",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-029",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-030",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-031",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-032",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-033",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-034",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-035",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-036",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-037",
    "kind": "note",
    "summary": "GET http://127.0.0.1:8000/ with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
    "detail": ""
   },
   {
-   "evidence_id": "EV-038",
+   "evidence_id": "EV-021",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-022",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-023",
    "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "summary": "GET http://127.0.0.1:8000/openapi.json with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
    "detail": ""
+  },
+  {
+   "evidence_id": "EV-024",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/docs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-025",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/ with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-026",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/?probe=1 with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-027",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/openapi.json?probe=1 with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-028",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/docs -> 200 (1006B)",
+   "detail": "\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\">\n    <link rel=\"shortcut icon\" href=\"https://fastapi.tiangolo.com/img/favicon.png\">\n    <title>FastAPI - Swagger UI</title>\n    </head>\n    <body>\n    <div id=\"swagger-ui\">\n    </div>\n    <script src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js\"></script>\n    <!-- `SwaggerUIBundle` is now available on the page -->\n    <script>\n    const ui = SwaggerUIBundle({\n        url: '/openapi.json',\n    \"dom_id\": \"#swagger-ui\",\n\"layout\": \"BaseLayout\",\n\"deepLinking\": true,\n\"showExtensions\": true,\n\"showCommonExtensions\": true,\noauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',\n    presets: [\n        SwaggerUIBundle.presets.apis,\n        SwaggerUIBundle.SwaggerUIStandalonePreset\n        ],\n    })\n    </script>\n    </body>\n    </html>\n    "
+  },
+  {
+   "evidence_id": "EV-029",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-030",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-031",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-032",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ping -> 200 (15B)",
+   "detail": "{\"ping\":\"pong\"}"
+  },
+  {
+   "evidence_id": "EV-033",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-034",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-035",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-036",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-037",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-038",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-039",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-040",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/openapi.json with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-041",
@@ -250,26 +250,26 @@
   {
    "evidence_id": "EV-042",
    "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/docs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "summary": "GET http://127.0.0.1:8000/?inspect=1 with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
    "detail": ""
   },
   {
    "evidence_id": "EV-043",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-044",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-045",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-046",
@@ -280,20 +280,20 @@
   {
    "evidence_id": "EV-047",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/flag -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
   },
   {
    "evidence_id": "EV-048",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
-  },
-  {
-   "evidence_id": "EV-049",
    "kind": "note",
    "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
    "detail": ""
+  },
+  {
+   "evidence_id": "EV-049",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-050",
@@ -310,38 +310,38 @@
   {
    "evidence_id": "EV-052",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (81B)",
+   "detail": "[{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"}]"
   },
   {
    "evidence_id": "EV-053",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
   },
   {
    "evidence_id": "EV-054",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-055",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-056",
    "kind": "http",
    "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
    "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
-   "evidence_id": "EV-057",
+   "evidence_id": "EV-056",
    "kind": "note",
    "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
    "detail": ""
+  },
+  {
+   "evidence_id": "EV-057",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-058",
@@ -363,123 +363,123 @@
   },
   {
    "evidence_id": "EV-061",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/openapi.json with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-062",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/openapi.json with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
    "evidence_id": "EV-063",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
   },
   {
    "evidence_id": "EV-064",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
   },
   {
    "evidence_id": "EV-065",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-066",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-067",
    "kind": "http",
    "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
    "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
   },
   {
-   "evidence_id": "EV-066",
-   "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
-   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
-  },
-  {
-   "evidence_id": "EV-067",
+   "evidence_id": "EV-068",
    "kind": "http",
    "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
    "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
-   "evidence_id": "EV-068",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
    "evidence_id": "EV-069",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
   },
   {
    "evidence_id": "EV-070",
-   "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/?view=source with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
   },
   {
    "evidence_id": "EV-071",
    "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "summary": "GET http://127.0.0.1:8000/openapi.json?detail=1 with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
    "detail": ""
   },
   {
    "evidence_id": "EV-072",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/docs -> 200 (1006B)",
+   "detail": "\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\">\n    <link rel=\"shortcut icon\" href=\"https://fastapi.tiangolo.com/img/favicon.png\">\n    <title>FastAPI - Swagger UI</title>\n    </head>\n    <body>\n    <div id=\"swagger-ui\">\n    </div>\n    <script src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js\"></script>\n    <!-- `SwaggerUIBundle` is now available on the page -->\n    <script>\n    const ui = SwaggerUIBundle({\n        url: '/openapi.json',\n    \"dom_id\": \"#swagger-ui\",\n\"layout\": \"BaseLayout\",\n\"deepLinking\": true,\n\"showExtensions\": true,\n\"showCommonExtensions\": true,\noauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',\n    presets: [\n        SwaggerUIBundle.presets.apis,\n        SwaggerUIBundle.SwaggerUIStandalonePreset\n        ],\n    })\n    </script>\n    </body>\n    </html>\n    "
   },
   {
    "evidence_id": "EV-073",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-074",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/static/app.js -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
   },
   {
    "evidence_id": "EV-075",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/static/main.js -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
   },
   {
    "evidence_id": "EV-076",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/script.js -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
   },
   {
    "evidence_id": "EV-077",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-078",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-079",
    "kind": "http",
-   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
-   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-080",
-   "kind": "note",
-   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   },
   {
    "evidence_id": "EV-081",
@@ -490,8 +490,110 @@
   {
    "evidence_id": "EV-082",
    "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (156B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-083",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-084",
+   "kind": "http",
    "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
    "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-085",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-086",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-087",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-088",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/?inspect=2 with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-089",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-090",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-091",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-092",
+   "kind": "note",
+   "summary": "POST http://127.0.0.1:8000/jobs with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-093",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:8000/ with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-094",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-095",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-096",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-097",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-098",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-099",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
   }
  ]
 }
