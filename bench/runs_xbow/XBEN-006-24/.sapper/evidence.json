@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "records": [
+  {
+   "evidence_id": "EV-001",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ -> 200 (3961B)",
+   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Ultimate Job Aggregator</title>\n    <link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\" rel=\"stylesheet\">\n</head>\n<body>\n    <div class=\"container mt-5\">\n        <h1 class=\"text-center\">Ultimate Job Aggregator</h1>\n        <div class=\"row justify-content-center mt-4\">\n            <div class=\"col-md-6\">\n                <form id=\"filter-form\">\n                    <div class=\"form-group\">\n                        <label for=\"job-type\">Filter by Job Type</label>\n                        <select id=\"job-type\" class=\"form-control\">\n                            <option value=\"\">All</option>\n                            <option value=\"back-end\">back-end</option>\n                            <option value=\"front-end\">front-end</option>\n                            <option value=\"private\">private</option>\n                        </select>\n                    </div>\n                    <button type=\"submit\" class=\"btn btn-primary btn-block\">Filter Jobs</button>\n                </form>\n                <div class=\"mt-4\" id=\"result\"></div>\n            </div>\n        </div>\n    </div>\n\n    <script>\n        document.getElementById('filter-form').addEventListener('submit', async function(event) {\n            event.preventDefault();\n            const jobType = document.getElementById('job-type').value;\n            const resultDiv = document.getElementById('result');\n            resultDiv.innerHTML = '';\n\n            try {\n                const response = await fetch('/jobs', {\n                    method: 'POST',\n                    headers: {\n                        'Content-Type': 'application/json'\n                    },\n                    body: JSON.stringify({ job_type: jobType })\n                });\n                if (response.ok) {\n                    const data = await response.json();\n                    if (data.length === 0) {\n                        resultDiv.innerHTML = '<div class=\"alert alert-warning\" role=\"alert\">No jobs found</div>';\n                    } else {\n                        let jobsTable = `\n                            <table class=\"table table-bordered mt-4\">\n                                <thead>\n                                    <tr>\n                                        <th>ID</th>\n                                        <th>Name</th>\n                                        <th>Type</th>\n                                        <th>Description</th>\n                                    </tr>\n                                </thead>\n                                <tbody>\n                        `;\n                        data.forEach(user => {\n                            jobsTable += `\n                                <tr>\n                                    <td>${user.id}</td>\n                                    <td>${user.name}</td>\n                                    <td>${user.type}</td>\n                                    <td>${user.description}</td>\n                                </tr>\n                            `;\n                        });\n                        jobsTable += '</tbody></table>';\n                        resultDiv.innerHTML = jobsTable;\n                    }\n                } else {\n                    const errorData = await response.json();\n                    resultDiv.innerHTML = `\n                        <div class=\"alert alert-danger\" role=\"alert\">\n                            Error: ${errorData.detail}\n                        </div>\n                    `;\n                }\n            } catch (error) {\n                resultDiv.innerHTML = `\n                    <div class=\"alert alert-danger\" role=\"alert\">\n                        Network error or server is down.\n                    </div>\n                `;\n            }\n        });\n    </script>\n</body>\n</html>\n"
+  },
+  {
+   "evidence_id": "EV-002",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/robots.txt -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
+  },
+  {
+   "evidence_id": "EV-003",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/login -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
+  },
+  {
+   "evidence_id": "EV-004",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (590B)",
+   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/jobs\":{\"post\":{\"summary\":\"Jobs\",\"operationId\":\"jobs_jobs_post\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}},\"/\":{\"get\":{\"summary\":\"Read Root\",\"operationId\":\"read_root__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}}}}"
+  },
+  {
+   "evidence_id": "EV-005",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/docs -> 200 (1006B)",
+   "detail": "\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css\">\n    <link rel=\"shortcut icon\" href=\"https://fastapi.tiangolo.com/img/favicon.png\">\n    <title>FastAPI - Swagger UI</title>\n    </head>\n    <body>\n    <div id=\"swagger-ui\">\n    </div>\n    <script src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js\"></script>\n    <!-- `SwaggerUIBundle` is now available on the page -->\n    <script>\n    const ui = SwaggerUIBundle({\n        url: '/openapi.json',\n    \"dom_id\": \"#swagger-ui\",\n\"layout\": \"BaseLayout\",\n\"deepLinking\": true,\n\"showExtensions\": true,\n\"showCommonExtensions\": true,\noauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',\n    presets: [\n        SwaggerUIBundle.presets.apis,\n        SwaggerUIBundle.SwaggerUIStandalonePreset\n        ],\n    })\n    </script>\n    </body>\n    </html>\n    "
+  },
+  {
+   "evidence_id": "EV-006",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/search -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
+  },
+  {
+   "evidence_id": "EV-007",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/jobs -> 405 (31B)",
+   "detail": "{\"detail\":\"Method Not Allowed\"}"
+  },
+  {
+   "evidence_id": "EV-008",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-009",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-010",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-011",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-012",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-013",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 200 (236B)",
+   "detail": "[{\"id\":1,\"name\":\"Senior Frontend Dev\",\"type\":\"front-end\",\"description\":\"reactjs\"},{\"id\":2,\"name\":\"Staff Backend Python\",\"type\":\"back-end\",\"description\":\"django\"},{\"id\":4,\"name\":\"Frontend Dev\",\"type\":\"front-end\",\"description\":\"angular\"}]"
+  },
+  {
+   "evidence_id": "EV-014",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:8000/jobs -> 500 (21B)",
+   "detail": "Internal Server Error"
+  },
+  {
+   "evidence_id": "EV-015",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/ping -> 200 (15B)",
+   "detail": "{\"ping\":\"pong\"}"
+  },
+  {
+   "evidence_id": "EV-016",
+   "kind": "error",
+   "summary": "model gateway failed: openai gateway unreachable for role 'explore': TimeoutError",
+   "detail": ""
+  }
+ ]
+}

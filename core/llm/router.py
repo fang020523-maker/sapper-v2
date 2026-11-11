@@ -18,7 +18,7 @@ from app.config import LLMConfig
 ANTHROPIC_VERSION = "2023-06-01"
 DEFAULT_TIMEOUT_S = 180
 RETRYABLE_STATUS = (429, 500, 502, 503, 504)
-MAX_ATTEMPTS = 3
+MAX_ATTEMPTS = 5
 
 
 class GatewayError(Exception):
@@ -148,8 +148,10 @@ class _HTTPGateway:
                 ) from exc
             except (urllib.error.URLError, TimeoutError, OSError) as exc:
                 if attempt < MAX_ATTEMPTS:
+                    # Reasoning gateways rate-limit in windows longer than
+                    # a quick backoff; wait through them instead of dying.
                     self.usage.retries += 1
-                    time.sleep(min(2 ** attempt, 8))
+                    time.sleep(min(5 * 2 ** (attempt - 1), 60))
                     continue
                 self.usage.observe_error()
                 raise GatewayError(

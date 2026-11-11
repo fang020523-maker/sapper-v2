@@ -10,59 +10,29 @@
   {
    "evidence_id": "EV-002",
    "kind": "http",
+   "summary": "GET http://127.0.0.1:8000/robots.txt -> 404 (22B)",
+   "detail": "{\"detail\":\"Not Found\"}"
+  },
+  {
+   "evidence_id": "EV-003",
+   "kind": "http",
    "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (2483B)",
    "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/token\":{\"post\":{\"summary\":\"Login For Access Token\",\"operationId\":\"login_for_access_token_token_post\",\"requestBody\":{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"$ref\":\"#/components/schemas/Body_login_for_access_token_token_post\"}}},\"required\":true},\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/\":{\"get\":{\"summary\":\"Login\",\"operationId\":\"login__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}},\"/company/{company_id}/jobs\":{\"get\":{\"summary\":\"Show Jobs\",\"operationId\":\"show_jobs_company__company_id__jobs_get\",\"parameters\":[{\"name\":\"company_id\",\"in\":\"path\",\"required\":true,\"schema\":{\"type\":\"integer\",\"title\":\"Company Id\"}}],\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}}},\"components\":{\"schemas\":{\"Body_login_for_access_token_token_post\":{\"properties\":{\"grant_type\":{\"anyOf\":[{\"type\":\"string\",\"pattern\":\"password\"},{\"type\":\"null\"}],\"title\":\"Grant Type\"},\"username\":{\"type\":\"string\",\"title\":\"Username\"},\"password\":{\"type\":\"string\",\"title\":\"Password\"},\"scope\":{\"type\":\"string\",\"title\":\"Scope\",\"default\":\"\"},\"client_id\":{\"anyOf\":[{\"type\":\"string\"},{\"type\":\"null\"}],\"title\":\"Client Id\"},\"client_secret\":{\"anyOf\":[{\"type\":\"string\"},{\"type\":\"null\"}],\"title\":\"Client Secret\"}},\"type\":\"object\",\"required\":[\"username\",\"password\"],\"title\":\"Body_login_for_access_token_token_post\"},\"HTTPValidationError\":{\"properties\":{\"detail\":{\"items\":{\"$ref\":\"#/components/schemas/ValidationError\"},\"type\":\"array\",\"title\":\"Detail\"}},\"type\":\"object\",\"title\":\"HTTPValidationError\"},\"ValidationError\":{\"properties\":{\"loc\":{\"items\":{\"anyOf\":[{\"type\":\"string\"},{\"type\":\"integer\"}]},\"type\":\"array\",\"title\":\"Location\"},\"msg\":{\"type\":\"string\",\"title\":\"Message\"},\"type\":{\"type\":\"string\",\"title\":\"Error Type\"}},\"type\":\"object\",\"required\":[\"loc\",\"msg\",\"type\"],\"title\":\"ValidationError\"}}}}"
   },
   {
-   "evidence_id": "EV-003",
+   "evidence_id": "EV-004",
    "kind": "http",
    "summary": "GET http://127.0.0.1:8000/docs -> 200 (939B)",
    "detail": "\n    <!DOCTYPE html>\n    <html>\n    <head>\n    <link type=\"text/css\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css\">\n    <link rel=\"shortcut icon\" href=\"https://fastapi.tiangolo.com/img/favicon.png\">\n    <title>FastAPI - Swagger UI</title>\n    </head>\n    <body>\n    <div id=\"swagger-ui\">\n    </div>\n    <script src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js\"></script>\n    <!-- `SwaggerUIBundle` is now available on the page -->\n    <script>\n    const ui = SwaggerUIBundle({\n        url: '/openapi.json',\n    \"dom_id\": \"#swagger-ui\",\n\"layout\": \"BaseLayout\",\n\"deepLinking\": true,\n\"showExtensions\": true,\n\"showCommonExtensions\": true,\noauth2RedirectUrl: window.location.origin + '/docs/oauth2-redirect',\n    presets: [\n        SwaggerUIBundle.presets.apis,\n        SwaggerUIBundle.SwaggerUIStandalonePreset\n        ],\n    })\n    </script>\n    </body>\n    </html>\n    "
   },
   {
-   "evidence_id": "EV-004",
+   "evidence_id": "EV-005",
    "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/robots.txt -> 404 (22B)",
+   "summary": "GET http://127.0.0.1:8000/jobs -> 404 (22B)",
    "detail": "{\"detail\":\"Not Found\"}"
   },
   {
-   "evidence_id": "EV-005",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/ with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
    "evidence_id": "EV-006",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/openapi.json with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-007",
-   "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/ -> 200 (957B)",
-   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\">\n    <title>Login</title>\n</head>\n<body>\n    <div class=\"container\">\n        \n<h2>Login</h2>\n\n\n<p>To try the app you can use the demo account: <strong>Username:</strong> demo, <strong>Password:</strong> demo</p>\n\n<form method=\"post\" action=\"/token\">\n    <div class=\"form-group\">\n        <label for=\"username\">Company Name</label>\n        <input type=\"text\" class=\"form-control\" id=\"username\" name=\"username\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input type=\"password\" class=\"form-control\" id=\"password\" name=\"password\" required>\n    </div>\n    <button type=\"submit\" class=\"btn btn-primary\">Login</button>\n</form>\n\n    </div>\n</body>\n</html>"
-  },
-  {
-   "evidence_id": "EV-008",
-   "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/openapi.json -> 200 (2483B)",
-   "detail": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"FastAPI\",\"version\":\"0.1.0\"},\"paths\":{\"/token\":{\"post\":{\"summary\":\"Login For Access Token\",\"operationId\":\"login_for_access_token_token_post\",\"requestBody\":{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"$ref\":\"#/components/schemas/Body_login_for_access_token_token_post\"}}},\"required\":true},\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/\":{\"get\":{\"summary\":\"Login\",\"operationId\":\"login__get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}}}}},\"/company/{company_id}/jobs\":{\"get\":{\"summary\":\"Show Jobs\",\"operationId\":\"show_jobs_company__company_id__jobs_get\",\"parameters\":[{\"name\":\"company_id\",\"in\":\"path\",\"required\":true,\"schema\":{\"type\":\"integer\",\"title\":\"Company Id\"}}],\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"text/html\":{\"schema\":{\"type\":\"string\"}}}},\"422\":{\"description\":\"Validation Error\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/HTTPValidationError\"}}}}}}},\"/ping\":{\"get\":{\"summary\":\"Ping\",\"operationId\":\"ping_ping_get\",\"responses\":{\"200\":{\"description\":\"Successful Response\",\"content\":{\"application/json\":{\"schema\":{}}}}}}}},\"components\":{\"schemas\":{\"Body_login_for_access_token_token_post\":{\"properties\":{\"grant_type\":{\"anyOf\":[{\"type\":\"string\",\"pattern\":\"password\"},{\"type\":\"null\"}],\"title\":\"Grant Type\"},\"username\":{\"type\":\"string\",\"title\":\"Username\"},\"password\":{\"type\":\"string\",\"title\":\"Password\"},\"scope\":{\"type\":\"string\",\"title\":\"Scope\",\"default\":\"\"},\"client_id\":{\"anyOf\":[{\"type\":\"string\"},{\"type\":\"null\"}],\"title\":\"Client Id\"},\"client_secret\":{\"anyOf\":[{\"type\":\"string\"},{\"type\":\"null\"}],\"title\":\"Client Secret\"}},\"type\":\"object\",\"required\":[\"username\",\"password\"],\"title\":\"Body_login_for_access_token_token_post\"},\"HTTPValidationError\":{\"properties\":{\"detail\":{\"items\":{\"$ref\":\"#/components/schemas/ValidationError\"},\"type\":\"array\",\"title\":\"Detail\"}},\"type\":\"object\",\"title\":\"HTTPValidationError\"},\"ValidationError\":{\"properties\":{\"loc\":{\"items\":{\"anyOf\":[{\"type\":\"string\"},{\"type\":\"integer\"}]},\"type\":\"array\",\"title\":\"Location\"},\"msg\":{\"type\":\"string\",\"title\":\"Message\"},\"type\":{\"type\":\"string\",\"title\":\"Error Type\"}},\"type\":\"object\",\"required\":[\"loc\",\"msg\",\"type\"],\"title\":\"ValidationError\"}}}}"
-  },
-  {
-   "evidence_id": "EV-009",
-   "kind": "note",
-   "summary": "GET http://127.0.0.1:8000/openapi.json?full=1 with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
-   "detail": ""
-  },
-  {
-   "evidence_id": "EV-010",
-   "kind": "http",
-   "summary": "GET http://127.0.0.1:8000/ -> 200 (957B)",
-   "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css\">\n    <title>Login</title>\n</head>\n<body>\n    <div class=\"container\">\n        \n<h2>Login</h2>\n\n\n<p>To try the app you can use the demo account: <strong>Username:</strong> demo, <strong>Password:</strong> demo</p>\n\n<form method=\"post\" action=\"/token\">\n    <div class=\"form-group\">\n        <label for=\"username\">Company Name</label>\n        <input type=\"text\" class=\"form-control\" id=\"username\" name=\"username\" required>\n    </div>\n    <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input type=\"password\" class=\"form-control\" id=\"password\" name=\"password\" required>\n    </div>\n    <button type=\"submit\" class=\"btn btn-primary\">Login</button>\n</form>\n\n    </div>\n</body>\n</html>"
-  },
-  {
-   "evidence_id": "EV-011",
    "kind": "error",
    "summary": "model gateway failed: openai gateway unreachable for role 'explore': TimeoutError",
    "detail": ""
