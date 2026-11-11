@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from app.config import LLMConfig
 
 ANTHROPIC_VERSION = "2023-06-01"
-DEFAULT_TIMEOUT_S = 120
+DEFAULT_TIMEOUT_S = 180
 RETRYABLE_STATUS = (429, 500, 502, 503, 504)
 MAX_ATTEMPTS = 3
 
@@ -121,8 +121,8 @@ class _HTTPGateway:
             attempt += 1
             req = urllib.request.Request(url, data=data, headers=headers, method="POST")
             try:
-                with self._opener.open(req, timeout=request.timeout_s) as resp:
-                    payload = json.loads(resp.read().decode("utf-8"))
+                with self._opener.open(req, timeout=30) as resp:
+                    payload = json.loads(_read_with_deadline(resp, request.timeout_s))
                 text, in_tok, out_tok = self.parse(payload)
                 response = LLMResponse(
                     text=text,
@@ -261,6 +261,37 @@ def build_gateway(config: LLMConfig, usage: UsageTracker | None = None) -> _HTTP
         f"no gateway for LLM_FLAVOR {config.flavor!r} — one flavor per run, "
         "never a fallback"
     )
+
+
+def _read_with_deadline(resp, total_s: int) -> str:
+    """Read the whole body under a wall-clock budget.
+
+    urlopen's timeout is per socket operation: a server that drips one
+    byte every 29 seconds holds the call forever. A reasoning gateway
+    does exactly that, so the budget is enforced here instead — chunked
+    reads with a short socket timeout, aborting the moment the deadline
+    passes.
+    """
+    import time as _time
+
+    deadline = _time.monotonic() + max(total_s, 30)
+    chunks = []
+    while True:
+        remaining = deadline - _time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError(f"body exceeded {total_s}s budget")
+        try:
+            chunk = resp.read(min(65536, max(4096, int(remaining * 1024))))
+        except TimeoutError:
+            if _time.monotonic() >= deadline:
+                raise
+            continue  # a quiet socket with budget left: keep waiting
+        if not chunk:
+            break
+        chunks.append(chunk)
+        if sum(len(c) for c in chunks) > 8 * 1024 * 1024:
+            raise GatewayError("model response larger than 8 MiB")
+    return b"".join(chunks).decode("utf-8", "replace")
 
 
 def _sleep_retry_after(exc: urllib.error.HTTPError) -> None:

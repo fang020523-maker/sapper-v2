@@ -138,6 +138,7 @@ def run_one(module: str, cid: str, readme: str, config: dict, keep_dir: Path | N
                     "LLM_BASE_URL": config["base_url"],
                     "LLM_API_KEY": config["api_key"],
                     "LLM_MODEL": config["model"],
+                    "LLM_EXTRA_BODY": json.dumps(config.get("extra_body") or {}),
                     "PYTHONIOENCODING": "utf-8",
                     "no_proxy": "localhost,127.0.0.1",
                     "NO_PROXY": "localhost,127.0.0.1",

@@ -28,6 +28,7 @@ PROMPTS_DIR = Path(__file__).resolve().parent.parent / "prompts"
 MIN_ANSWER_CONFIDENCE = 0.5
 MAX_STEPS_DEFAULT = 20
 MAX_STEPS_HARD_CAP = 40
+MAX_ACTIONS_PER_TURN = 5
 ALLOWED_METHODS = ("GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE")
 
 
@@ -76,29 +77,45 @@ class Explorer:
             )
             try:
                 payload = self._ask_model(prompt)
-            except GatewayError:
+            except GatewayError as exc:
+                # The detail names status/reachability, never credentials.
+                self.evidence.record("error", f"model gateway failed: {exc}")
                 return [], "llm_error"
             if payload is None:
                 return [], "model_parse_error"
             thought = str(payload.get("thought", ""))[:500]
-            action = payload.get("action")
-            if not isinstance(action, dict) or "type" not in action:
+            actions = payload.get("actions")
+            if not isinstance(actions, list) or not actions:
+                single = payload.get("action")
+                actions = [single] if isinstance(single, dict) else []
+            if not actions:
                 self.evidence.record("note", f"model gave unusable action: {thought}")
                 last_reason = "bad_action"
                 continue
-            kind = action.get("type")
-            if kind == "answer":
-                candidate = _answer_candidate(action)
-                if candidate is not None:
-                    return [candidate], "answered"
-                last_reason = "bad_answer"
-                continue
-            if kind == "stop":
-                return [], str(action.get("reason", "model_stop"))[:200]
-            outcome = self._execute(kind, action)
-            self.evidence.record(
-                outcome[0], outcome[1], outcome[2] if len(outcome) > 2 else ""
-            )
+            stop_reason = None
+            answered = None
+            for action in actions[:MAX_ACTIONS_PER_TURN]:
+                if not isinstance(action, dict) or "type" not in action:
+                    continue
+                kind = action.get("type")
+                if kind == "answer":
+                    candidate = _answer_candidate(action)
+                    if candidate is not None:
+                        answered = candidate
+                        break
+                    last_reason = "bad_answer"
+                    continue
+                if kind == "stop":
+                    stop_reason = str(action.get("reason", "model_stop"))[:200]
+                    break
+                outcome = self._execute(kind, action)
+                self.evidence.record(
+                    outcome[0], outcome[1], outcome[2] if len(outcome) > 2 else ""
+                )
+            if answered is not None:
+                return [answered], "answered"
+            if stop_reason is not None:
+                return [], stop_reason
         return [], last_reason
 
     # -- one model call, one repair ----------------------------------------
