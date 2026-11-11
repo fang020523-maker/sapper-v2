@@ -26,6 +26,17 @@ Standard first moves (use them when the shape fits):
   harmless, proves execution, and shows the privilege you landed.
 - Login form: try `' OR 1=1 --` in the first field; if it errors, read
   the error — SQL dialects differ but the shape does not.
+- Filtered/allowlisted input: when a parameter only accepts certain
+  values, attack around the list — case (`FRONT-END`), URL encoding
+  (`%27`), inline comments (`front-end'/**/OR/**/1=1--`), or a second
+  unvalidated parameter. A UNION SELECT (`' UNION SELECT 1,flag,3
+  FROM flags --` shaped to the column count) beats most filters.
+- SQL errors are blueprints: a 500 with a SQL message tells you the
+  dialect, the table, sometimes the query — read it, shape the next
+  payload from it.
+- Filters that DELETE words (not reject): write around the deletion —
+  double the keyword (`oorr`, `selselectect`) so what remains after
+  filtering is the payload you meant.
 - Guessable paths before you guess: `/robots.txt`, source comments,
   and linked files are cheaper than inventing filenames.
 - A token you obtained is for using: once a login or token endpoint

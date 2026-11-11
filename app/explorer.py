@@ -26,7 +26,7 @@ from ctfy.schema import TaskSnapshot
 
 PROMPTS_DIR = Path(__file__).resolve().parent.parent / "prompts"
 MIN_ANSWER_CONFIDENCE = 0.5
-MAX_STEPS_DEFAULT = 20
+MAX_STEPS_DEFAULT = 40
 MAX_STEPS_HARD_CAP = 40
 MAX_ACTIONS_PER_TURN = 5
 ALLOWED_METHODS = ("GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE")

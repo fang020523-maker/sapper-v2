@@ -73,7 +73,12 @@ def scan(root: Path, *, is_repo: bool) -> list[str]:
             continue
         # In the repo, tests legitimately carry fake tokens; everywhere
         # else (artifacts, work dirs) they must not appear.
-        in_tests = is_repo and (rel.startswith("tests/") or rel.startswith("docs/"))
+        in_tests = is_repo and (
+            rel.startswith("tests/")
+            or rel.startswith("docs/")
+            or rel.startswith("prompts/")  # teaches the agent about headers
+            or rel == "bench/config.json"  # git-ignored local model config
+        )
         findings.extend(
             scan_file(
                 path,

@@ -20,6 +20,7 @@ STATE_SCHEMA = 1
 MAX_RECORD_BYTES = 8 * 1024
 MAX_SUMMARY_BYTES = 2 * 1024
 CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]+")
+_FLAG_RE = re.compile(r"(?:flag|FLAG|ctfy|CTFY)\{[^}\s]{4,}\}")
 
 
 @dataclass
@@ -47,6 +48,12 @@ class EvidenceStore:
 
     def record(self, kind: str, summary: str, detail: str = "") -> str:
         evidence_id = f"EV-{len(self._records) + 1:03d}"
+        # A flag-like string anywhere in the observation must survive the
+        # per-record caps: hoist it into the summary so truncation can
+        # never swallow the one thing the round exists to find.
+        hoisted = _FLAG_RE.search(detail or "") or _FLAG_RE.search(summary or "")
+        if hoisted:
+            summary = f"FLAG-LIKE {hoisted.group(0)} | " + (summary or "")
         record = EvidenceRecord(
             evidence_id=evidence_id,
             kind=kind[:16],
@@ -59,13 +66,22 @@ class EvidenceStore:
         self._save()
         return evidence_id
 
-    def render_for_prompt(self, limit: int = 40, detail_chars: int = 400) -> str:
-        """Compact listing, newest last, with the head of each detail —
-        an observation the model cannot read is not evidence."""
+    def render_for_prompt(self, limit: int = 15, detail_chars: int = 400) -> str:
+        """Windowed listing: the last few observations with their detail,
+        everything older as one line each — a prompt that grows without
+        bound starves the model's attention long before the budget ends."""
         if not self._records:
             return "(no observations yet)"
+        recent = self._records[-limit:]
+        older = self._records[: -limit] if len(self._records) > limit else []
         lines = []
-        for record in self._records[-limit:]:
+        if older:
+            lines.append(f"({len(older)} earlier observations, condensed)")
+            for record in older:
+                first = record.summary.splitlines()[0] if record.summary else ""
+                lines.append(f"- {record.evidence_id} [{record.kind}] {first[:110]}")
+            lines.append("(recent observations, full detail)")
+        for record in recent:
             first_line = record.summary.splitlines()[0] if record.summary else ""
             detail = " ".join(record.detail[:detail_chars].split())
             line = f"- {record.evidence_id} [{record.kind}] {first_line}"

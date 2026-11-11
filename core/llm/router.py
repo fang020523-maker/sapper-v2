@@ -147,11 +147,21 @@ class _HTTPGateway:
                     status=status,
                 ) from exc
             except (urllib.error.URLError, TimeoutError, OSError) as exc:
+                # Only a genuine timeout means "slow or holding gateway".
+                # Refused connections and DNS failures are answers: fast.
+                is_timeout = isinstance(exc, TimeoutError) or (
+                    isinstance(exc, urllib.error.URLError)
+                    and isinstance(getattr(exc, "reason", None), TimeoutError)
+                )
                 if attempt < MAX_ATTEMPTS:
-                    # Reasoning gateways rate-limit in windows longer than
-                    # a quick backoff; wait through them instead of dying.
+                    # A refused connection is an answer, not a wait: fail
+                    # fast. A timeout means the gateway is slow or holding
+                    # (rate-limit windows) — be patient through it.
                     self.usage.retries += 1
-                    time.sleep(min(5 * 2 ** (attempt - 1), 60))
+                    if not is_timeout:
+                        time.sleep(min(2 * attempt, 6))
+                    else:
+                        time.sleep(min(5 * 2 ** (attempt - 1), 60))
                     continue
                 self.usage.observe_error()
                 raise GatewayError(
