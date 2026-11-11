@@ -1,21 +1,24 @@
-"""T4 · SQL injection: a string-concatenated login bypass."""
+"""T4 · SQL injection: a string-concatenated login bypass.
+
+A real in-memory sqlite table and a really concatenated query — any
+payload that would defeat the real thing defeats this one.
+"""
+import sqlite3
+
 from _lib import ChallengeHandler, serve
-
-# The "database": one admin row. The bug is the login query concatenates
-# user input; ' OR 1=1 -- makes it match the admin without a password.
-ADMIN = {"user": "admin", "password": "n0t-th3-fl4g"}
-
-
-def login_query_result(user: str, password: str) -> bool:
-    # Models a query: SELECT * FROM users WHERE user='{u}' AND pass='{p}'
-    # Faithful enough: the classic payload comments out the password check.
-    payload_user = user
-    return payload_user == "admin' OR 1=1 --" or (
-        payload_user == ADMIN["user"] and password == ADMIN["password"]
-    )
 
 
 class T4(ChallengeHandler):
+    def _db(self) -> sqlite3.Connection:
+        conn = sqlite3.connect(":memory:")
+        conn.execute("CREATE TABLE users (user TEXT, pass TEXT)")
+        # The flag is the admin's password column, so any bypass that
+        # selects the row reveals it — a faithful jeopardy shape.
+        conn.execute("INSERT INTO users VALUES ('admin', ?)", (self.flag,))
+        conn.execute("INSERT INTO users VALUES ('bob', 'hunter2')")
+        conn.commit()
+        return conn
+
     def routes(self, path, query, body):
         if path == "/":
             return 200, "text/html", (
@@ -26,10 +29,18 @@ class T4(ChallengeHandler):
                 "<button>Login</button></form></body></html>"
             )
         if path == "/login":
-            if login_query_result(body.get("user", ""), body.get("password", "")):
+            user = body.get("user", "")
+            password = body.get("password", "")
+            # The bug, spelled out: user input goes in unescaped.
+            sql = f"SELECT user, pass FROM users WHERE user='{user}' AND pass='{password}'"
+            try:
+                rows = self._db().execute(sql).fetchall()
+            except sqlite3.Error as exc:
+                return 200, "text/html", f"<html><body>sql error: {exc}</body></html>"
+            if rows:
                 return 200, "text/html", (
-                    f"<html><body><h2>Welcome, admin</h2>"
-                    f"<p>flag: {self.flag}</p></body></html>"
+                    f"<html><body><h2>Welcome, {rows[0][0]}</h2>"
+                    f"<p>flag: {rows[0][1]}</p></body></html>"
                 )
             return 200, "text/html", "<html><body>login failed</body></html>"
         return None

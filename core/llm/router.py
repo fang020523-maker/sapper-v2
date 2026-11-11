@@ -39,6 +39,7 @@ class LLMRequest:
     json_mode: bool = False        # ask for a JSON object when the flavor supports it
     timeout_s: int = DEFAULT_TIMEOUT_S
     turn_id: int = 0
+    extra_body: dict = field(default_factory=dict)  # vendor knobs (e.g. thinking on/off)
 
 
 @dataclass(frozen=True)
@@ -83,6 +84,7 @@ class _HTTPGateway:
             )
         self.config = config
         self.usage = usage or UsageTracker()
+        self.extra_body = dict(config.extra_body)
         # No ambient proxy: the platform's gateway address is reachable
         # directly, and a developer machine's proxy settings must not
         # silently capture the run's model traffic.
@@ -191,6 +193,8 @@ class OpenAIGateway(_HTTPGateway):
         }
         if request.json_mode:
             body["response_format"] = {"type": "json_object"}
+        body.update(self.extra_body)
+        body.update(request.extra_body)
         return body
 
     def parse(self, payload: dict) -> tuple[str, int, int]:

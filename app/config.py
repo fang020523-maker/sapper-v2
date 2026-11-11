@@ -7,6 +7,7 @@ objects but never in their reprs, logs or state files.
 """
 from __future__ import annotations
 
+import json
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -24,6 +25,7 @@ class LLMConfig:
     base_url: str | None = None
     model: str | None = None
     api_key: str = field(default=None, repr=False)
+    extra_body: dict = field(default_factory=dict, repr=False)
 
     @property
     def funded(self) -> bool:
@@ -100,11 +102,22 @@ def from_env(environ: dict[str, str] | None = None) -> RuntimeConfig:
                 f"CTFY_EVAL_MAX_TURNS must be positive, got {max_turns}"
             )
 
+    extra_body: dict = {}
+    raw_extra = env.get("LLM_EXTRA_BODY")
+    if raw_extra:
+        try:
+            parsed = json.loads(raw_extra)
+            if isinstance(parsed, dict):
+                extra_body = parsed
+        except json.JSONDecodeError:
+            raise ConfigError("LLM_EXTRA_BODY must be a JSON object") from None
+
     llm = LLMConfig(
         flavor=(env.get("LLM_FLAVOR") or None),
         base_url=(env.get("LLM_BASE_URL") or None),
         api_key=(env.get("LLM_API_KEY") or None),
         model=(env.get("LLM_MODEL") or None),
+        extra_body=extra_body,
     )
     if llm.flavor is not None and llm.flavor not in KNOWN_FLAVORS:
         raise ConfigError(

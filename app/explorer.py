@@ -26,8 +26,8 @@ from ctfy.schema import TaskSnapshot
 
 PROMPTS_DIR = Path(__file__).resolve().parent.parent / "prompts"
 MIN_ANSWER_CONFIDENCE = 0.5
-MAX_STEPS_DEFAULT = 12
-MAX_STEPS_HARD_CAP = 30
+MAX_STEPS_DEFAULT = 20
+MAX_STEPS_HARD_CAP = 40
 ALLOWED_METHODS = ("GET", "POST", "PUT", "HEAD", "OPTIONS", "DELETE")
 
 
@@ -53,6 +53,7 @@ class Explorer:
         self.work_dir = work_dir
         self.max_steps = min(max_steps, MAX_STEPS_HARD_CAP)
         self._template = (PROMPTS_DIR / "explore.md").read_text(encoding="utf-8")
+        self._seen_requests: set[tuple[str, str]] = set()
 
     def run(self, open_question_ids: list[str]) -> tuple[list[dict], str]:
         """Explore until an answer lands, the budget ends, or the model
@@ -113,6 +114,7 @@ class Explorer:
                 ),
                 messages=tuple(messages),
                 json_mode=True,
+                max_output_tokens=8192,
                 turn_id=self.usage.calls + 1,
             )
             try:
@@ -159,6 +161,25 @@ class Explorer:
         body_bytes = None
         if body is not None:
             body_bytes = str(body)[:64 * 1024].encode("utf-8", "replace")
+        # Identity is the whole request, not just the URL: the same URL
+        # with different headers or body is a different probe (a UA-gate
+        # challenge depends on exactly that distinction).
+        key = (
+            method,
+            url,
+            tuple(sorted(headers.items())),
+            (body_bytes or b"")[:256],
+        )
+        if key in self._seen_requests:
+            # Re-sending what we already saw wastes a turn; say so in the
+            # observation the model reads next, and spend no request.
+            return (
+                "note",
+                f"{method} {url} with those exact headers was already "
+                "requested earlier — the result has not changed; change "
+                "the path, parameters, headers or method",
+            )
+        self._seen_requests.add(key)
         try:
             self.target.scope.check_http(url)
             response = self.target.http(

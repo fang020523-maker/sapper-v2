@@ -63,7 +63,7 @@ def plan_step(challenge: str, prompt: str, call_index: int) -> dict:
         if call_index == 0:
             return reply({"type": "http", "method": "GET", "url": f"{base}/"})
         return reply({"type": "http", "method": "GET",
-                      "url": f"{base}/?file=../../../../var/flags/secret_flag.txt"})
+                      "url": f"{base}/?file=../../../../var/flags/flag.txt"})
     return reply({"type": "stop", "reason": "no plan"})
 
 

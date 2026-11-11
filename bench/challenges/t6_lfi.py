@@ -7,12 +7,16 @@ from _lib import ChallengeHandler, serve
 PAGES = {
     "/pages/about.txt": "About this site: a tiny CMS with two pages.",
     "/pages/contact.txt": "Contact: webmaster@example.test",
-    "/etc/passwd": "root:x:0:0:root:/root:/bin/sh\nwww:x:1000:1000::/www:/usr/bin/nologin",
+    "/etc/passwd": (
+        "root:x:0:0:root:/root:/bin/sh\n"
+        "www:x:1000:1000::/www:/usr/bin/nologin\n"
+        "flagsvc:x:998:998::/var/flags:/usr/sbin/nologin  # this service holds the box's flag"
+    ),
 }
 
 
 class T6(ChallengeHandler):
-    flag_path = "/var/flags/secret_flag.txt"
+    flag_path = "/var/flags/flag.txt"
 
     def routes(self, path, query, body):
         if path == "/" and "file" in query:

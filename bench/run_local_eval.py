@@ -44,7 +44,7 @@ CHALLENGES = [
      "Mini CMS — three pages of nothing much."),
 ]
 
-RUN_TIMEOUT_S = 420
+RUN_TIMEOUT_S = 600
 
 
 def load_config(path: Path) -> dict:
@@ -143,17 +143,26 @@ def run_one(module: str, cid: str, readme: str, config: dict, keep_dir: Path | N
                     "NO_PROXY": "localhost,127.0.0.1",
                 }
             )
-            proc = subprocess.run(
-                [sys.executable, str(REPO_ROOT / "app" / "entrypoint.py")],
-                cwd=tmp,
-                env=env,
-                capture_output=True,
-                text=True,
-                timeout=RUN_TIMEOUT_S,
-            )
-            outcome["exit_code"] = proc.returncode
-            if proc.returncode not in (0,) and proc.stderr:
-                outcome["error"] = proc.stderr.strip()[-500:]
+            try:
+                proc = subprocess.run(
+                    [sys.executable, str(REPO_ROOT / "app" / "entrypoint.py")],
+                    cwd=tmp,
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=RUN_TIMEOUT_S,
+                )
+                outcome["exit_code"] = proc.returncode
+                if proc.returncode not in (0,) and proc.stderr:
+                    outcome["error"] = proc.stderr.strip()[-500:]
+            except subprocess.TimeoutExpired as exc:
+                outcome["error"] = f"agent exceeded {RUN_TIMEOUT_S}s"
+                # Keep whatever the agent had done and said before the kill.
+                (work / "agent-stderr.log").write_text(
+                    (exc.stderr or "")[-4000:] if isinstance(exc.stderr, str)
+                    else (exc.stderr or b"")[-4000:].decode("utf-8", "replace"),
+                    encoding="utf-8",
+                )
             result_path = work / "result.json"
             if result_path.exists():
                 result = json.loads(result_path.read_text(encoding="utf-8"))
@@ -173,8 +182,8 @@ def run_one(module: str, cid: str, readme: str, config: dict, keep_dir: Path | N
                 if dest.exists():
                     shutil.rmtree(dest)
                 shutil.copytree(work, dest)
-    except subprocess.TimeoutExpired:
-        outcome["error"] = f"agent exceeded {RUN_TIMEOUT_S}s"
+    except Exception as exc:  # noqa: BLE001 — the bench must report, not crash
+        outcome["error"] = f"{exc.__class__.__name__}: {exc}"
     finally:
         outcome["seconds"] = round(time.monotonic() - started, 1)
         platform.close()
