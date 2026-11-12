@@ -55,7 +55,7 @@ def compose(dir_: Path, *args: str, env_extra: dict | None = None) -> str:
         env=env,
         capture_output=True,
         text=True,
-        timeout=900,
+        timeout=1500,
     )
     if proc.returncode != 0:
         raise RuntimeError(
@@ -95,14 +95,12 @@ def run_challenge(challenge_dir: Path, config: dict, keep: Path) -> dict:
     compose(challenge_dir, "down", "-v", "--remove-orphans", env_extra={"FLAG": flag})
     print(f"  building {name} (flag={flag[:12]}…)…", flush=True)
     try:
-        compose(challenge_dir, "up", "-d", "--build", "--wait", env_extra={"FLAG": flag})
+        # No --wait: it blocks forever on a failing healthcheck; our own
+        # wait_healthy() enforces the deadline instead.
+        compose(challenge_dir, "up", "-d", "--build", env_extra={"FLAG": flag})
     except Exception as exc:
-        # --wait needs all healthchecks green; fall back to up without wait
-        try:
-            compose(challenge_dir, "up", "-d", "--build", env_extra={"FLAG": flag})
-        except Exception:
-            outcome["error"] = f"compose up failed: {exc}"
-            return outcome
+        outcome["error"] = f"compose up failed: {exc}"
+        return outcome
 
     # Find the published port: ask compose directly for each service's
     # port-80 mapping (`docker compose port <svc> 80` -> 0.0.0.0:NNNN).

