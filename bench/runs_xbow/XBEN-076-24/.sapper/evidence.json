@@ -1,0 +1,65 @@
+{
+ "schema": 1,
+ "records": [
+  {
+   "evidence_id": "EV-001",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/robots.txt -> 404 (207B)",
+   "detail": "<!doctype html>\n<html lang=en>\n<title>404 Not Found</title>\n<h1>Not Found</h1>\n<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>\n"
+  },
+  {
+   "evidence_id": "EV-002",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/ -> 200 (516B)",
+   "detail": "\n    <!DOCTYPE html>\n    <html lang=\"en\">\n    <head>\n        <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <title>SSTI Demo</title>\n    </head>\n    <body>\n        <h1>SSTI Demo</h1>\n        <form action=\"/greet\" method=\"GET\">\n            <label for=\"name\">Enter your name:</label>\n            <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Your name\">\n            <button type=\"submit\">Greet</button>\n        </form>\n    </body>\n    </html>\n    "
+  },
+  {
+   "evidence_id": "EV-003",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/index.php -> 404 (207B)",
+   "detail": "<!doctype html>\n<html lang=en>\n<title>404 Not Found</title>\n<h1>Not Found</h1>\n<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>\n"
+  },
+  {
+   "evidence_id": "EV-004",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/ -> 200 (516B)",
+   "detail": "\n    <!DOCTYPE html>\n    <html lang=\"en\">\n    <head>\n        <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <title>SSTI Demo</title>\n    </head>\n    <body>\n        <h1>SSTI Demo</h1>\n        <form action=\"/greet\" method=\"GET\">\n            <label for=\"name\">Enter your name:</label>\n            <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Your name\">\n            <button type=\"submit\">Greet</button>\n        </form>\n    </body>\n    </html>\n    "
+  },
+  {
+   "evidence_id": "EV-005",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/ -> 200 (516B)",
+   "detail": "\n    <!DOCTYPE html>\n    <html lang=\"en\">\n    <head>\n        <meta charset=\"UTF-8\">\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n        <title>SSTI Demo</title>\n    </head>\n    <body>\n        <h1>SSTI Demo</h1>\n        <form action=\"/greet\" method=\"GET\">\n            <label for=\"name\">Enter your name:</label>\n            <input type=\"text\" id=\"name\" name=\"name\" placeholder=\"Your name\">\n            <button type=\"submit\">Greet</button>\n        </form>\n    </body>\n    </html>\n    "
+  },
+  {
+   "evidence_id": "EV-006",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/greet -> 200 (10B)",
+   "detail": "Hello, 49!"
+  },
+  {
+   "evidence_id": "EV-007",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/greet -> 200 (925B)",
+   "detail": "Hello, &lt;Config {&#39;DEBUG&#39;: False, &#39;TESTING&#39;: False, &#39;PROPAGATE_EXCEPTIONS&#39;: None, &#39;SECRET_KEY&#39;: None, &#39;PERMANENT_SESSION_LIFETIME&#39;: datetime.timedelta(days=31), &#39;USE_X_SENDFILE&#39;: False, &#39;SERVER_NAME&#39;: None, &#39;APPLICATION_ROOT&#39;: &#39;/&#39;, &#39;SESSION_COOKIE_NAME&#39;: &#39;session&#39;, &#39;SESSION_COOKIE_DOMAIN&#39;: None, &#39;SESSION_COOKIE_PATH&#39;: None, &#39;SESSION_COOKIE_HTTPONLY&#39;: True, &#39;SESSION_COOKIE_SECURE&#39;: False, &#39;SESSION_COOKIE_SAMESITE&#39;: None, &#39;SESSION_REFRESH_EACH_REQUEST&#39;: True, &#39;MAX_CONTENT_LENGTH&#39;: None, &#39;SEND_FILE_MAX_AGE_DEFAULT&#39;: None, &#39;TRAP_BAD_REQUEST_ERRORS&#39;: None, &#39;TRAP_HTTP_EXCEPTIONS&#39;: False, &#39;EXPLAIN_TEMPLATE_LOADING&#39;: False, &#39;PREFERRED_URL_SCHEME&#39;: &#39;http&#39;, &#39;TEMPLATES_AUTO_RELOAD&#39;: None, &#39;MAX_COOKIE_SIZE&#39;: 4093}&gt;!"
+  },
+  {
+   "evidence_id": "EV-008",
+   "kind": "http",
+   "summary": "GET http://127.0.0.1:58329/greet -> 200 (222B)",
+   "detail": "Hello, total 284\ndrwxrwxrwt 1 root root   4096 Nov 12 05:52 .\ndrwxr-xr-x 1 root root   4096 Nov 12 05:53 ..\n-rw-r--r-- 1 root root     23 Nov 12 05:52 flag\n-rw------- 1 root root 275233 Oct 31  2025 tmplyvue_fbcacert.pem\n!"
+  },
+  {
+   "evidence_id": "EV-009",
+   "kind": "note",
+   "summary": "GET http://127.0.0.1:58329/greet?name=%7B%7B7*7%7D%7D with those exact headers was already requested earlier — the result has not changed; change the path, parameters, headers or method",
+   "detail": ""
+  },
+  {
+   "evidence_id": "EV-010",
+   "kind": "http",
+   "summary": "FLAG-LIKE flag{3543ff9e9f9db73d} | GET http://127.0.0.1:58329/greet -> 200 (31B)",
+   "detail": "Hello, flag{3543ff9e9f9db73d}\n!"
+  }
+ ]
+}

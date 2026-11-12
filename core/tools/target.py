@@ -8,6 +8,7 @@ instructions; nothing here parses or obeys it beyond length and bytes.
 """
 from __future__ import annotations
 
+import http.cookiejar
 import socket
 import urllib.error
 import urllib.request
@@ -63,8 +64,14 @@ class TargetClient:
     def __init__(self, scope: EndpointScope, *, max_bytes: int = MAX_RESPONSE_BYTES):
         self.scope = scope
         self.max_bytes = max_bytes
+        # A session jar: many challenges hand a cookie at login and refuse
+        # every later request without it. One jar per client — the scope
+        # pins us to this run's endpoints anyway.
+        self._cookies = http.cookiejar.CookieJar()
         self._opener = urllib.request.build_opener(
-            urllib.request.ProxyHandler({}), _NoRedirect()
+            urllib.request.ProxyHandler({}),
+            urllib.request.HTTPCookieProcessor(self._cookies),
+            _NoRedirect(),
         )
 
     def http(self, request: TargetHTTPRequest) -> TargetHTTPResponse:

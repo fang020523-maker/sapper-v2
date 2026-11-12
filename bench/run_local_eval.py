@@ -40,6 +40,8 @@ CHALLENGES = [
      "Member Login — log in as admin."),
     ("t5_cmdi", "BENCH-T5",
      "Network Tools — a ping utility box."),
+    ("t7_session", "BENCH-T7",
+     "Member Area — members only. The flag is in your profile."),
     ("t6_lfi", "BENCH-T6",
      "Mini CMS — three pages of nothing much."),
 ]

@@ -102,30 +102,38 @@ def run_challenge(challenge_dir: Path, config: dict, keep: Path) -> dict:
         outcome["error"] = f"compose up failed: {exc}"
         return outcome
 
-    # Find the published port: ask compose directly for each service's
-    # port-80 mapping (`docker compose port <svc> 80` -> 0.0.0.0:NNNN).
+    # Find the published port from the running containers: challenges
+    # listen on 80, 8000, 5000 … — whatever they actually publish.
+    import re as _re
+
     port = None
     try:
-        services = [
-            s.strip()
-            for s in compose(
-                challenge_dir, "config", "--services", env_extra={"FLAG": flag}
-            ).splitlines()
-            if s.strip()
-        ]
-        for service in services:
+        ps_out = subprocess.run(
+            [_docker_exe(), "ps", "--format", "json"],
+            capture_output=True, text=True, timeout=30,
+        ).stdout.strip()
+        for line in ps_out.splitlines():
             try:
-                out = compose(challenge_dir, "port", service, "80", env_extra={"FLAG": flag})
-            except RuntimeError:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
                 continue
-            candidate = out.strip().rsplit(":", 1)[-1]
-            if candidate.isdigit():
-                port = int(candidate)
+            # This docker emits "Ports": "0.0.0.0:42131->8000/tcp, ...";
+            # older ones nest it under Publishers. Read both.
+            m = _re.search(r"0\.0\.0\.0:(\d+)->", entry.get("Ports") or "")
+            if m:
+                port = int(m.group(1))
                 break
-    except RuntimeError as exc:
+            for pub in entry.get("Publishers") or []:
+                if pub.get("publishedPort"):
+                    port = int(pub["publishedPort"])
+                    break
+            if port:
+                break
+    except Exception as exc:  # noqa: BLE001 — report, don't crash the bench
         outcome["error"] = f"port discovery failed: {exc}"
     if not port:
-        outcome.setdefault("error", "no published port found")
+        if not outcome["error"]:
+            outcome["error"] = "no published port found"
         compose(challenge_dir, "down", "-v", "--remove-orphans", env_extra={"FLAG": flag})
         return outcome
 

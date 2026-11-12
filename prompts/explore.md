@@ -39,6 +39,15 @@ Standard first moves (use them when the shape fits):
   filtering is the payload you meant.
 - Guessable paths before you guess: `/robots.txt`, source comments,
   and linked files are cheaper than inventing filenames.
+- Login walls: try default credentials first (admin/admin,
+  admin/password, admin/admin123, user with the service name); then try
+  REGISTERING the privileged name yourself (many apps let a second
+  'admin' be created), and check /register, /reset_password and
+  /logout-then-register flows — the flag often sits behind the profile
+  of a privileged account, not behind the login itself.
+- After a successful login: go somewhere authenticated — /profile,
+  /dashboard, /account, /me, /home, or the page the login form named.
+  Staring at the login page again proves nothing.
 - A token you obtained is for using: once a login or token endpoint
   answers, send the token on every later request as an
   `Authorization: Bearer <token>` header — protected endpoints and
