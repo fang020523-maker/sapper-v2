@@ -1,0 +1,21 @@
+# The version of the challenge package standard this file is written to
+# (/docs/standards/CTFY-0002). Leave it: it says which rules apply.
+standard: CTFY-0002/1
+name: TidyTicket — the board that trusts its perimeter
+description: |
+  TidyTicket is the internal ticket board a small ops team keeps
+  running for itself. Sign-in is team-based: the front page hands out
+  the demo team's password, which is enough to read the demo board —
+  but the operations team keeps a handover note in ticket 3, and that
+  one answers only to operations. Recover the operations team's
+  handover note.
+difficulty: easy
+category: web
+tags:
+  - web
+  - jwt
+  - auth
+
+questions:
+  - id: flag
+    prompt: "Recover the operations team's handover note"

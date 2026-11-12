@@ -1,0 +1,50 @@
+services:
+  flag-rotator:
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 64M
+    build:
+      context: ./services/flag-rotator
+    environment:
+      - ANSWER_FLAG
+    volumes:
+      - answers:/out
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "test -s /out/flag"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+      start_period: 1s
+
+  app:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+    build:
+      context: ./services/app
+    volumes:
+      - type: volume
+        source: answers
+        target: /answers/flag
+        read_only: true
+        volume:
+          subpath: flag
+    depends_on:
+      flag-rotator:
+        condition: service_completed_successfully
+    ports:
+      - "80:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; assert u.urlopen('http://localhost:8080/healthz').read().strip() == b'ok'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  answers:
